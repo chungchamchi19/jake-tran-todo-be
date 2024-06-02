@@ -157,7 +157,7 @@ yarn dev
 ```
 
 Run the app in the development mode
-Open http://localhost:3000 to view in the browser.
+Open [http://localhost:5173/](http://localhost:5173/) to view in the browser.
 
 ## 5. Run test suite
 
