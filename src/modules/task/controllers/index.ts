@@ -20,10 +20,10 @@ const getTasks = async (req: Request, res: Response) => {
 const createTask = async (req: Request, res: Response) => {
   const body: Task = req.body;
   verifyCreateTask(body);
-  const movie = await taskServices.createTask(body);
+  const task = await taskServices.createTask(body);
   return res.status(200).json({
     status: "success",
-    result: movie,
+    result: task,
   });
 };
 
@@ -49,10 +49,10 @@ const updateTask = async (req: Request, res: Response) => {
     throw new CustomError(codes.BAD_REQUEST, "Task id is required!");
   }
   verifyUpdateTask(body);
-  const movie = await taskServices.updateTask(body);
+  const task = await taskServices.updateTask(body);
   return res.status(200).json({
     status: "success",
-    result: movie,
+    result: task,
   });
 };
 

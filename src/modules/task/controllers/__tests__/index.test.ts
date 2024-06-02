@@ -1,10 +1,10 @@
 import { describe, it, expect, jest, beforeEach, afterAll } from "@jest/globals";
-import movieControllers from "..";
+import taskControllers from "..";
 import { res } from "../../../../tests/mock";
 import server from "../../../..";
 import codes from "../../../../errors/codes";
 
-describe("movieControllers", () => {
+describe("taskControllers", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -13,15 +13,15 @@ describe("movieControllers", () => {
     await server.close();
   });
 
-  describe("getMovies", () => {
-    it("should return status 200 when get movies success", async () => {
+  describe("getTasks", () => {
+    it("should return status 200 when get tasks success", async () => {
       const req = {
         query: {
           page: 1,
           limit: 10,
         },
       } as any;
-      await movieControllers.getMovies(req, res);
+      await taskControllers.getTasks(req, res);
       expect(res.status(200).json).toHaveBeenCalledWith({
         status: "success",
         result: [],
@@ -29,19 +29,16 @@ describe("movieControllers", () => {
     });
   });
 
-  describe("shareMovie", () => {
-    it("should return status 200 when share movie success", async () => {
+  describe("createTask", () => {
+    it("should return status 200 when create task success", async () => {
       const req = {
         body: {
           title: "test",
           description: "test",
-          url: "test",
-        },
-        user: {
-          id: 1,
+          status: "todo",
         },
       } as any;
-      await movieControllers.shareMovie(req, res);
+      await taskControllers.createTask(req, res);
       expect(res.status(200).json).toHaveBeenCalledWith({
         status: "success",
         result: {
@@ -49,27 +46,12 @@ describe("movieControllers", () => {
         },
       });
     });
-
-    it("should return status 401 when there is no user in request", async () => {
-      const req = {
-        body: {
-          title: "test",
-          description: "test",
-          url: "test",
-        },
-      } as any;
-      try {
-        await movieControllers.shareMovie(req, res);
-      } catch (error) {
-        expect((error as { code: number }).code).toBe(codes.UNAUTHORIZED);
-      }
-    });
   });
 });
 
-jest.mock("../../services/movie", () => {
+jest.mock("../../services/task", () => {
   return {
-    getMovies: jest.fn().mockReturnValue([]),
-    createMovie: jest.fn().mockReturnValue({ id: 1 }),
+    getTasks: jest.fn().mockReturnValue([]),
+    createTask: jest.fn().mockReturnValue({ id: 1 }),
   };
 });

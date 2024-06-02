@@ -1,40 +1,26 @@
 import { describe, it, expect, afterAll, jest } from "@jest/globals";
 import request from "supertest";
 import server from "../..";
-import { getMockUserRequest } from "../../tests/setup";
-import { verifyAccessToken } from "../../modules/auth/services/helper";
 
-jest.mock("../../modules/auth/services/helper", () => {
-  return {
-    verifyAccessToken: jest.fn().mockReturnValue({ id: 1 }),
-    hashBcrypt: jest.fn().mockReturnValue("123"),
-    generateSalt: jest.fn().mockReturnValue("123"),
-    compareBcrypt: jest.fn().mockReturnValue(true),
-  };
-});
-
-describe("Movie", () => {
+describe("Task", () => {
   afterAll(async () => {
     await server.close();
   });
 
-  describe("GET /api/public/movies", () => {
-    it("should return status 200 and return movies", async () => {
-      const response = await request(server).get("/api/public/movies");
+  describe("GET /api/tasks", () => {
+    it("should return status 200 and return tasks", async () => {
+      const response = await request(server).get("/api/tasks");
       expect(response.status).toBe(200);
       expect(response.body).toEqual({ status: "success", result: [] });
     });
   });
 
-  describe("POST /api/movies", () => {
-    it("should return status 200 and the movie detail", async () => {
-      const mockUser = await getMockUserRequest();
-      jest.mocked(verifyAccessToken).mockReturnValue(mockUser as any);
-      const response = await request(server).post("/api/movies").set("authorization", "Bearer abs").send({
+  describe("POST /api/tasks", () => {
+    it("should return status 200 and the task detail", async () => {
+      const response = await request(server).post("/api/tasks").send({
         title: "test",
         description: "test",
-        youtube_id: "test",
-        thumbnail: "",
+        status: "todo",
       });
       delete response.body?.result?.id;
       expect(response.status).toBe(200);
@@ -43,9 +29,8 @@ describe("Movie", () => {
         result: {
           title: "test",
           description: "test",
-          youtube_id: "test",
-          user_id: mockUser.id,
-          thumbnail: "",
+          status: "todo",
+          dueDate: null,
           createdAt: null,
           updatedAt: null,
         },
